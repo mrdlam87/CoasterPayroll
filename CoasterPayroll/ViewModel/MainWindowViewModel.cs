@@ -143,8 +143,10 @@ namespace CoasterPayroll.ViewModel
             PaySlips.Add(new()
             {
                 Employee = SelectedEmployee,
+                HourlyRate = double.Parse(HourlyRateInput),
                 WeekHours = int.Parse(WeekHoursInput),
                 PayGrossCalculated = int.Parse(WeekHoursInput) * double.Parse(HourlyRateInput),
+                SubmittedDate = DateTime.Now,
             });
 
             HourlyRateInput = WeekHoursInput = "";

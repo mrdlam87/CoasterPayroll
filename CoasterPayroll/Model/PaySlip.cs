@@ -9,6 +9,7 @@ namespace CoasterPayroll.Model
     public class PaySlip
     {
         public Employee Employee { get; set; }
+        public double HourlyRate { get; set; }
         public int WeekNumber { get; set; }
         public int WeekHours { get; set; }
         public string SubmittedBy { get; set; }

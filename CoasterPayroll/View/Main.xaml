@@ -103,14 +103,20 @@
                 <Grid>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding DisplayedPaySlips}"
                               AutoGenerateColumns="False"
-                              IsReadOnly="True"
+                              CanUserAddRows="False"
                               SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID"
+                                                IsReadOnly="True"
                                                 Binding="{Binding Employee.EmployeeID}"/>
+                            <DataGridTextColumn Header="Date Submitted"
+                                                Binding="{Binding SubmittedDate}"/>
+                            <DataGridTextColumn Header="Hr Rate"
+                                                Binding="{Binding HourlyRate}"/>
                             <DataGridTextColumn Header="Week Hours"
                                                 Binding="{Binding WeekHours}"/>
                             <DataGridTextColumn Header="Gross Pay"
+                                                IsReadOnly="True"
                                                 Binding="{Binding PayGrossCalculated}"/>
                         </DataGrid.Columns>
                     </DataGrid>
