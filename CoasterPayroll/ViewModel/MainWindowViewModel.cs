@@ -16,6 +16,7 @@ namespace CoasterPayroll.ViewModel
         #region Fields
         private List<Employee> _employeeRecords;
         private ObservableCollection<PaySlip> _paySlips;
+        private ObservableCollection<PaySlip> _displayedPaySlips;
         private Employee _selectedEmployee;
         private string _query;
         private string _hourlyRateInput;
@@ -54,6 +55,19 @@ namespace CoasterPayroll.ViewModel
             }
         }
 
+        public ObservableCollection<PaySlip> DisplayedPaySlips
+        {
+            get 
+            { 
+                if (SelectedEmployee is null)
+                    return new ObservableCollection<PaySlip>();
+
+                var filteredPayslips = PaySlips.Where(paySlip => paySlip.Employee.EmployeeID == SelectedEmployee.EmployeeID).ToList();
+
+                return new ObservableCollection<PaySlip>(filteredPayslips);
+            }
+        }
+
         public Employee SelectedEmployee
         {
             get => _selectedEmployee;
@@ -61,6 +75,7 @@ namespace CoasterPayroll.ViewModel
             {
                 _selectedEmployee = value;
                 OnPropertyChanged(nameof(SelectedEmployee));
+                OnPropertyChanged(nameof(DisplayedPaySlips));
             }
         }
 
@@ -133,6 +148,7 @@ namespace CoasterPayroll.ViewModel
             });
 
             HourlyRateInput = WeekHoursInput = "";
+            OnPropertyChanged(nameof(DisplayedPaySlips));
         }
         #endregion
     }

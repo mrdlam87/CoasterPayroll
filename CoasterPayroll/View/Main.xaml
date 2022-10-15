@@ -101,7 +101,7 @@
             <GroupBox Header="Payment Details" 
                       Padding="20">
                 <Grid>
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding PaySlips}"
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding DisplayedPaySlips}"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               SelectionMode="Single">
