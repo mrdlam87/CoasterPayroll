@@ -29,20 +29,31 @@
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
 
-                    <Grid VerticalAlignment="Top">
+                    <Grid Grid.Row="0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Label Content="Search"
+                        
+                        <WrapPanel>
+                            <Button Content="Load" 
+                                Margin="0,0,10,0" Padding="10,0,10,0" 
+                                Command="{Binding LoadCommand}"/>
+                            <Button Content="Save" 
+                                Margin="0,0,40,0" Padding="10,0,10,0"
+                                Command="{Binding}"/>
+                            <Label Content="Search"
                                 Margin="0,0,10,0" Padding="0,0,0,0"
                                 HorizontalAlignment="Left"/>
+                        </WrapPanel>
+
                         <TextBox Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}"
                                  Grid.Column="1"/>
 
                     </Grid>
 
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredRecords}"
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding FilteredRecords}"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               SelectionMode="Single"
@@ -58,25 +69,50 @@
                                                 Binding="{Binding TaxNumber}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-
-                    <WrapPanel Grid.Row="2" VerticalAlignment="Bottom">
-                        <Button Content="Load" 
-                                Margin="0,0,10,0" Padding="10,0,10,0" 
-                                Command="{Binding LoadCommand}"/>
-                        <Button Content="Save" 
-                                Margin="0,0,10,0" Padding="10,0,10,0"
-                                Command="{Binding}"/>
-                    </WrapPanel>
+                    
+                    <Grid Grid.Row="2"
+                          VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Calculate"
+                                Padding="10,0,10,0" Margin="0,0,20,0"
+                                Command="{Binding CalculateCommand}"/>
+                        <Label Grid.Column="1" 
+                               Content="Hourly Rate"
+                               Padding="0,0,0,0" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="2"
+                                 Text="{Binding HourlyRateInput}"/>
+                        <Label Grid.Column="3" 
+                               Content="Week Hours"
+                               Padding="0,0,0,0" Margin="20,0,5,0"/>
+                        <TextBox Grid.Column="4"
+                                 Text="{Binding WeekHoursInput}"/>
+                    </Grid>
                 </Grid>
             </GroupBox>
         </Border>
         <Border Grid.Column="1" 
                 Padding="10">
-            <GroupBox Header="Employee Detail" 
+            <GroupBox Header="Payment Details" 
                       Padding="20">
                 <Grid>
-                    <DataGrid>
-                        
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding PaySlips}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID"
+                                                Binding="{Binding Employee.EmployeeID}"/>
+                            <DataGridTextColumn Header="Week Hours"
+                                                Binding="{Binding WeekHours}"/>
+                            <DataGridTextColumn Header="Gross Pay"
+                                                Binding="{Binding PayGrossCalculated}"/>
+                        </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </GroupBox>

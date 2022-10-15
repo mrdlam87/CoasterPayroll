@@ -15,8 +15,11 @@ namespace CoasterPayroll.ViewModel
     {
         #region Fields
         private List<Employee> _employeeRecords;
+        private ObservableCollection<PaySlip> _paySlips;
         private Employee _selectedEmployee;
         private string _query;
+        private string _hourlyRateInput;
+        private string _weekHoursInput;
         #endregion
 
         #region Properties
@@ -41,6 +44,16 @@ namespace CoasterPayroll.ViewModel
             }
         }
 
+        public ObservableCollection<PaySlip> PaySlips
+        {
+            get => _paySlips;
+            set
+            {
+                _paySlips = value;
+                OnPropertyChanged(nameof(PaySlips));
+            }
+        }
+
         public Employee SelectedEmployee
         {
             get => _selectedEmployee;
@@ -62,27 +75,64 @@ namespace CoasterPayroll.ViewModel
             }
         }
 
+        public string HourlyRateInput 
+        { 
+            get => _hourlyRateInput;
+            set 
+            { 
+                _hourlyRateInput = value;
+                OnPropertyChanged(nameof(HourlyRateInput));
+            }
+        }
+        public string WeekHoursInput 
+        { 
+            get => _weekHoursInput; 
+            set
+            {
+                _weekHoursInput = value;
+                OnPropertyChanged(nameof(WeekHoursInput));
+            }
+        }
+
         #endregion
 
         #region ICommands
         public ICommand LoadCommand { get; }
         public ICommand SaveCommand { get; }
+        public ICommand CalculateCommand { get; }
+
         #endregion
 
         //Constructor
         public MainWindowViewModel()
         {
-            //List<Employee> data = CsvImporter.ImportRecords(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
-            //EmployeeRecords = new ObservableCollection<Employee>(data);
+            EmployeeRecords = CsvImporter.ImportRecords(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
             EmployeeRecords = new List<Employee>();
             LoadCommand = new ViewModelCommand(LoadRecords);
+            CalculateCommand = new ViewModelCommand(AddPaySlip);
             Query = "";
+            PaySlips = new ObservableCollection<PaySlip>();
         }
 
         #region Methods
         private void LoadRecords(object obj)
         {
             EmployeeRecords = CsvImporter.ImportRecords(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
+        }
+
+        private void AddPaySlip(object obj)
+        {
+            if (SelectedEmployee is null)
+                return;
+
+            PaySlips.Add(new()
+            {
+                Employee = SelectedEmployee,
+                WeekHours = int.Parse(WeekHoursInput),
+                PayGrossCalculated = int.Parse(WeekHoursInput) * double.Parse(HourlyRateInput),
+            });
+
+            HourlyRateInput = WeekHoursInput = "";
         }
         #endregion
     }
