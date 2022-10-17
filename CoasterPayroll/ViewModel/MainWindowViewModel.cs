@@ -16,7 +16,6 @@ namespace CoasterPayroll.ViewModel
         #region Fields
         private List<Employee> _employeeRecords;
         private ObservableCollection<PaySlip> _paySlips;
-        private ObservableCollection<PaySlip> _displayedPaySlips;
         private Employee _selectedEmployee;
         private string _query;
         private string _hourlyRateInput;
@@ -57,8 +56,8 @@ namespace CoasterPayroll.ViewModel
 
         public ObservableCollection<PaySlip> DisplayedPaySlips
         {
-            get 
-            { 
+            get
+            {
                 if (SelectedEmployee is null)
                     return new ObservableCollection<PaySlip>();
 
@@ -90,24 +89,29 @@ namespace CoasterPayroll.ViewModel
             }
         }
 
-        public string HourlyRateInput 
-        { 
+        public string HourlyRateInput
+        {
             get => _hourlyRateInput;
-            set 
-            { 
+            set
+            {
                 _hourlyRateInput = value;
                 OnPropertyChanged(nameof(HourlyRateInput));
             }
         }
-        public string WeekHoursInput 
-        { 
-            get => _weekHoursInput; 
+        public string WeekHoursInput
+        {
+            get => _weekHoursInput;
             set
             {
                 _weekHoursInput = value;
                 OnPropertyChanged(nameof(WeekHoursInput));
             }
         }
+
+        public double SuperRate { get => 10.5; }
+
+        public PayCalculatorNoThreshold PayCalculatorNoThreshold { get; set; }
+        public PayCalculatorWithThreshold PayCalculatorWithThreshold { get; set; }
 
         #endregion
 
@@ -121,18 +125,20 @@ namespace CoasterPayroll.ViewModel
         //Constructor
         public MainWindowViewModel()
         {
-            EmployeeRecords = CsvImporter.ImportRecords(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
+            //EmployeeRecords = CsvImporter.ImportEmployees(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
             EmployeeRecords = new List<Employee>();
             LoadCommand = new ViewModelCommand(LoadRecords);
             CalculateCommand = new ViewModelCommand(AddPaySlip);
-            Query = "";
             PaySlips = new ObservableCollection<PaySlip>();
+            PayCalculatorNoThreshold = new();
+            PayCalculatorWithThreshold = new();
+            Query = "";
         }
 
         #region Methods
         private void LoadRecords(object obj)
         {
-            EmployeeRecords = CsvImporter.ImportRecords(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
+            EmployeeRecords = CsvImporter.ImportEmployees(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
         }
 
         private void AddPaySlip(object obj)
@@ -140,13 +146,20 @@ namespace CoasterPayroll.ViewModel
             if (SelectedEmployee is null)
                 return;
 
+            PayCalculator PayCalcualtor = SelectedEmployee.IsWithThreshold ? PayCalculatorWithThreshold : PayCalculatorNoThreshold;
+            int weekHours = int.Parse(WeekHoursInput);
+            double hourlyRate = double.Parse(HourlyRateInput);
+
             PaySlips.Add(new()
             {
                 Employee = SelectedEmployee,
-                HourlyRate = double.Parse(HourlyRateInput),
-                WeekHours = int.Parse(WeekHoursInput),
-                PayGrossCalculated = int.Parse(WeekHoursInput) * double.Parse(HourlyRateInput),
                 SubmittedDate = DateTime.Now,
+                WeekHours = weekHours,
+                HourlyRate = hourlyRate,
+                PayGrossCalculated = weekHours * hourlyRate,
+                TaxCalculated = PayCalcualtor.CalculateTax(weekHours, hourlyRate),
+                PayNetCalculated = PayCalcualtor.CalculatePay(weekHours, hourlyRate),
+                SuperCalculated = PayCalcualtor.CalculateSuper(weekHours, hourlyRate, SuperRate),
             });
 
             HourlyRateInput = WeekHoursInput = "";

@@ -13,6 +13,6 @@ namespace CoasterPayroll.Model
         public Person? Person { get; set; }
         public Login? Login { get; set; }
         public int TaxNumber { get; set; }
-        public int TaxThreshold { get; set; }
+        public bool IsWithThreshold { get; set; }
     }
 }

@@ -20,6 +20,5 @@ namespace CoasterPayroll.Model
         public double TaxCalculated { get; set; }
         public double SuperCalculated { get; set; }
         public double PayNetCalculated { get; set; }
-
     }
 }

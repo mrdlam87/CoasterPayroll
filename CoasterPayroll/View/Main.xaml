@@ -103,6 +103,7 @@
                 <Grid>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding DisplayedPaySlips}"
                               AutoGenerateColumns="False"
+                              IsReadOnly="True"
                               CanUserAddRows="False"
                               SelectionMode="Single">
                         <DataGrid.Columns>
@@ -116,8 +117,13 @@
                             <DataGridTextColumn Header="Week Hours"
                                                 Binding="{Binding WeekHours}"/>
                             <DataGridTextColumn Header="Gross Pay"
-                                                IsReadOnly="True"
                                                 Binding="{Binding PayGrossCalculated}"/>
+                            <DataGridTextColumn Header="Tax"
+                                                Binding="{Binding TaxCalculated}"/>
+                            <DataGridTextColumn Header="Net Pay"
+                                                Binding="{Binding PayNetCalculated}"/>
+                            <DataGridTextColumn Header="Superannuation"
+                                                Binding="{Binding SuperCalculated}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
