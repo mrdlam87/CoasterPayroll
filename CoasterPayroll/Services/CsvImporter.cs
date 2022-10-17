@@ -69,15 +69,60 @@ namespace CsvHelperMaui.Services
             return data;
         }
 
-        public static void SaveRecords(List<Employee> records, string path)
+        public static void SavePaySlip(PaySlip paySlip, string path)
         {
+            PaySlipRecord record = new()
+            {
+                EmployeeID = paySlip.Employee.EmployeeID,
+                WeekHours = paySlip.WeekHours,
+                HourlyRate = paySlip.HourlyRate,
+                IsWithThreshold = paySlip.Employee.IsWithThreshold ? "Y" : "N",
+                GrossPay = paySlip.PayGrossCalculated,
+                Tax = paySlip.TaxCalculated,
+                NetPay = paySlip.PayNetCalculated,
+                Superannuation = paySlip.SuperCalculated,
+            };
+
+            using (var writer = new StreamWriter(path))
+            {
+                using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+                csv.WriteHeader<PaySlipRecord>();
+                csv.NextRecord();
+                csv.WriteRecord(record);
+            }
+        }
+
+        public static void SavePaySlips(List<PaySlip> paySlips, string path)
+        {
+            List<PaySlipRecord> records = paySlips.Select(paySlip => new PaySlipRecord {
+                EmployeeID = paySlip.Employee.EmployeeID,
+                WeekHours = paySlip.WeekHours,
+                HourlyRate = paySlip.HourlyRate,
+                IsWithThreshold = paySlip.Employee.IsWithThreshold ? "Y" : "N",
+                GrossPay = paySlip.PayGrossCalculated,
+                Tax = paySlip.TaxCalculated,
+                NetPay = paySlip.PayNetCalculated,
+                Superannuation = paySlip.SuperCalculated,
+            }).ToList();
+
             using (var writer = new StreamWriter(path))
             {
                 using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
                 csv.WriteRecords(records);
             }
-
         }
+    }
+
+    public sealed class PaySlipRecord
+    {
+        public int EmployeeID { get; set; }
+        public int WeekHours { get; set; }
+        public double HourlyRate { get; set; }
+        public string IsWithThreshold { get; set; }
+        public double GrossPay { get; set; }
+        public double Tax { get; set; }
+        public double NetPay { get; set; }
+        public double Superannuation { get; set; }
     }
 
     public sealed class EmployeeRecord

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CoasterPayroll.ViewModel
@@ -17,6 +18,7 @@ namespace CoasterPayroll.ViewModel
         private List<Employee> _employeeRecords;
         private ObservableCollection<PaySlip> _paySlips;
         private Employee _selectedEmployee;
+        private PaySlip _selectedPaySlip;
         private string _query;
         private string _hourlyRateInput;
         private string _weekHoursInput;
@@ -78,6 +80,16 @@ namespace CoasterPayroll.ViewModel
             }
         }
 
+        public PaySlip SelectedPaySlip
+        {
+            get => _selectedPaySlip;
+            set
+            {
+                _selectedPaySlip = value;
+                OnPropertyChanged(nameof(SelectedPaySlip));
+            }
+        }
+
         public string Query
         {
             get => _query;
@@ -117,9 +129,9 @@ namespace CoasterPayroll.ViewModel
 
         #region ICommands
         public ICommand LoadCommand { get; }
-        public ICommand SaveCommand { get; }
         public ICommand CalculateCommand { get; }
-
+        public ICommand SavePayslipCommand { get; }
+        public ICommand SaveAllPayslipsCommand { get; }
         #endregion
 
         //Constructor
@@ -127,11 +139,13 @@ namespace CoasterPayroll.ViewModel
         {
             //EmployeeRecords = CsvImporter.ImportEmployees(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
             EmployeeRecords = new List<Employee>();
-            LoadCommand = new ViewModelCommand(LoadRecords);
-            CalculateCommand = new ViewModelCommand(AddPaySlip);
             PaySlips = new ObservableCollection<PaySlip>();
             PayCalculatorNoThreshold = new();
             PayCalculatorWithThreshold = new();
+            LoadCommand = new ViewModelCommand(LoadRecords);
+            CalculateCommand = new ViewModelCommand(AddPaySlip);
+            SavePayslipCommand = new ViewModelCommand(SavePaySlip);
+            SaveAllPayslipsCommand = new ViewModelCommand(SaveAllPaySlips);
             Query = "";
         }
 
@@ -139,6 +153,11 @@ namespace CoasterPayroll.ViewModel
         private void LoadRecords(object obj)
         {
             EmployeeRecords = CsvImporter.ImportEmployees(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
+            
+            if (EmployeeRecords.Count > 0)
+            {
+                MessageBox.Show("All employee records have been loaded.");
+            }
         }
 
         private void AddPaySlip(object obj)
@@ -164,6 +183,30 @@ namespace CoasterPayroll.ViewModel
 
             HourlyRateInput = WeekHoursInput = "";
             OnPropertyChanged(nameof(DisplayedPaySlips));
+        }
+
+
+
+        public void SavePaySlip(object obj)
+        {
+            if (SelectedPaySlip is null)
+                return;
+
+            string employeeDetailHeader = $"{SelectedEmployee.EmployeeID}-{SelectedEmployee.Person.FirstName}_{SelectedEmployee.Person.LastName}";
+            var fileName = $@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\Pay-{employeeDetailHeader}-{DateTime.Now.ToFileTime()}.csv";
+
+            CsvImporter.SavePaySlip(SelectedPaySlip, fileName);
+        }
+
+        public void SaveAllPaySlips(object obj)
+        {
+            if (DisplayedPaySlips.Count == 0)
+                return;
+
+            string employeeDetailHeader = $"{SelectedEmployee.EmployeeID}-{SelectedEmployee.Person.FirstName}_{SelectedEmployee.Person.LastName}";
+            var fileName = $@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\AllPays-{employeeDetailHeader}-{DateTime.Now.ToFileTime()}.csv";
+
+            CsvImporter.SavePaySlips(DisplayedPaySlips.ToList(), fileName);
         }
         #endregion
     }
