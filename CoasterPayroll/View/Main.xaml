@@ -137,7 +137,6 @@
                                 Command="{Binding ShowDetailCommand}"/>
                     </Grid>
 
-
                     <DataGrid Grid.Row="1" 
                               ItemsSource="{Binding DisplayedPaySlips}"
                               Visibility="{Binding ShowAllVisibility}"
@@ -147,11 +146,22 @@
                               SelectionMode="Single"
                               SelectedItem="{Binding SelectedPaySlip}"
                               IsSynchronizedWithCurrentItem="True">
+                        
                         <DataGrid.InputBindings>
                             <MouseBinding MouseAction="LeftDoubleClick"
                                           Command="{Binding ShowDetailCommand}"/>
                         </DataGrid.InputBindings>
-                        
+
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <TextBlock Text="Double Click for Detail" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowStyle>
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID"
                                                 Binding="{Binding Employee.EmployeeID}"/>
@@ -169,16 +179,19 @@
                     </DataGrid>
                     
                     <ListView Grid.Row="1"
-                             Visibility="{Binding ShowDetailVisibility}">
-                        <TextBlock Text="{Binding SelectedPaySlip.Employee.EmployeeID, StringFormat='Employee ID: {0}'}"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.Employee.Person.FirstName, StringFormat='First Name: {0}'}"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.Employee.Person.LastName, StringFormat='First Name: {0}'}"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.WeekHours, StringFormat='Hours Worked: {0}'}"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.HourlyRate, StringFormat='Hourly Rate: {0:C}'}"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.PayGrossCalculated, StringFormat='Gross Pay: {0:C}'}"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.TaxCalculated, StringFormat='Net Tax: {0:C}'}"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.PayNetCalculated, StringFormat='Net Pay: {0:C}'}"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.SuperCalculated, StringFormat='Superannuation: {0:C}'}"/>
+                              Padding="5"
+                              Visibility="{Binding ShowDetailVisibility}"
+                              IsEnabled="False">
+                        <TextBlock Text="{Binding SelectedPaySlip.SubmittedDate, StringFormat='Date Submitted: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.EmployeeID, StringFormat='Employee ID: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.Person.FirstName, StringFormat='First Name: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.Person.LastName, StringFormat='First Name: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.WeekHours, StringFormat='Hours Worked: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.HourlyRate, StringFormat='Hourly Rate: {0:C}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.PayGrossCalculated, StringFormat='Gross Pay: {0:C}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.TaxCalculated, StringFormat='Net Tax: {0:C}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.PayNetCalculated, StringFormat='Net Pay: {0:C}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.SuperCalculated, StringFormat='Superannuation: {0:C}'}" Margin="0,0,0,5"/>
                     </ListView>
                 </Grid>
             </GroupBox>
