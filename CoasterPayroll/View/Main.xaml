@@ -33,23 +33,24 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        
-                        <WrapPanel>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="0">
                             <Button Content="Load" 
-                                Margin="0,0,10,0" Padding="10,0,10,0" 
+                                Margin="0,0,10,0" Padding="10,0,10,0"
                                 Command="{Binding LoadCommand}"/>
                             <Button Content="Save" 
-                                Margin="0,0,40,0" Padding="10,0,10,0"
+                                Padding="10,0,10,0"
                                 Command="{Binding}"/>
-                            <Label Content="Search"
-                                Margin="0,0,10,0" Padding="0,0,0,0"
-                                HorizontalAlignment="Left"/>
-                        </WrapPanel>
-
+                        </StackPanel>
+                        <Label Content="Search"
+                               Grid.Column="1"
+                               Margin="0,0,10,0" Padding="0,0,0,0"
+                               HorizontalAlignment="Right"/>
                         <TextBox Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}"
-                                 Grid.Column="1"/>
-
+                                 Grid.Column="2"/>
                     </Grid>
 
                     <DataGrid Grid.Row="1"
@@ -69,7 +70,7 @@
                                                 Binding="{Binding TaxNumber}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    
+
                     <Grid Grid.Row="2"
                           VerticalAlignment="Bottom">
                         <Grid.ColumnDefinitions>
@@ -106,31 +107,56 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <WrapPanel Grid.Row="0">
+                    <Grid Grid.Row="0"
+                          VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        
                         <Button Content="Save" 
+                                Grid.Column="0"
                                 Margin="0,0,10,0" Padding="10,0,10,0" 
                                 Command="{Binding SavePayslipCommand}"/>
-                        <Button Content="Save All" 
-                                Margin="0,0,40,0" Padding="10,0,10,0"
+                        <Button Content="Save All"
+                                Grid.Column="1"
+                                Margin="0,0,0,0" Padding="10,0,10,0"
                                 Command="{Binding SaveAllPayslipsCommand}"/>
-                    </WrapPanel>
+                        <Button Content="Show All"
+                                Grid.Column="2"
+                                Margin="0,0,0,0" Padding="10,0,10,0"
+                                HorizontalAlignment="Right"
+                                Visibility="{Binding ShowDetailVisibility}"
+                                Command="{Binding ShowAllCommand}"/>
+                        <Button Content="Show Detail"
+                                Grid.Column="2"
+                                Margin="0,0,0,0" Padding="10,0,10,0"
+                                HorizontalAlignment="Right"
+                                Visibility="{Binding ShowAllVisibility}"
+                                Command="{Binding ShowDetailCommand}"/>
+                    </Grid>
 
 
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding DisplayedPaySlips}"
+                    <DataGrid Grid.Row="1" 
+                              ItemsSource="{Binding DisplayedPaySlips}"
+                              Visibility="{Binding ShowAllVisibility}"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               CanUserAddRows="False"
                               SelectionMode="Single"
-                              SelectedItem="{Binding SelectedPaySlip}">
+                              SelectedItem="{Binding SelectedPaySlip}"
+                              IsSynchronizedWithCurrentItem="True">
+                        <DataGrid.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick"
+                                          Command="{Binding ShowDetailCommand}"/>
+                        </DataGrid.InputBindings>
+                        
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID"
                                                 Binding="{Binding Employee.EmployeeID}"/>
                             <DataGridTextColumn Header="Date Submitted"
                                                 Binding="{Binding SubmittedDate}"/>
-                            <DataGridTextColumn Header="$/Hr"
-                                                Binding="{Binding HourlyRate}"/>
-                            <DataGridTextColumn Header="Hrs/Wk"
-                                                Binding="{Binding WeekHours}"/>
                             <DataGridTextColumn Header="Gross Pay"
                                                 Binding="{Binding PayGrossCalculated}"/>
                             <DataGridTextColumn Header="Tax"
@@ -141,6 +167,19 @@
                                                 Binding="{Binding SuperCalculated}"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                    
+                    <ListView Grid.Row="1"
+                             Visibility="{Binding ShowDetailVisibility}">
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.EmployeeID, StringFormat='Employee ID: {0}'}"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.Person.FirstName, StringFormat='First Name: {0}'}"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.Person.LastName, StringFormat='First Name: {0}'}"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.WeekHours, StringFormat='Hours Worked: {0}'}"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.HourlyRate, StringFormat='Hourly Rate: {0:C}'}"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.PayGrossCalculated, StringFormat='Gross Pay: {0:C}'}"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.TaxCalculated, StringFormat='Net Tax: {0:C}'}"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.PayNetCalculated, StringFormat='Net Pay: {0:C}'}"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.SuperCalculated, StringFormat='Superannuation: {0:C}'}"/>
+                    </ListView>
                 </Grid>
             </GroupBox>
         </Border>
