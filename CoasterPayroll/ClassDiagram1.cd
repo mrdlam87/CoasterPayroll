@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CoasterPayroll.SimpleModel.Employee">
+    <Position X="8" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimpleModel\Employee.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CoasterPayroll.SimpleModel.PayCalculator">
+    <Position X="12.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAABAAABABAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimpleModel\PayCalculator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CoasterPayroll.SimpleModel.PaySlip">
+    <Position X="10.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAgAAAAACACAAAAAAAAECAEAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimpleModel\PaySlip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CoasterPayroll.SimpleModel.Person">
+    <Position X="8" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>SimpleModel\Person.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

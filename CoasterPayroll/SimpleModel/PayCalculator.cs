@@ -5,16 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoasterPayroll.Model
+namespace CoasterPayroll.SimpleModel
 {
     public class PayCalculator
     {
         public PayCalculator()
         {
-            List<TaxRate> taxRates = CsvImporter.ImportTaxRates(@"C:\\Users\\dannn\\OneDrive\\Programming\\C#\\Coaster Payroll\\CoasterPayroll\\CoasterPayroll\\taxrate-withthreshold.csv");
-            TaxThresholds = taxRates.Select(taxRate => taxRate.UpperThreshold).ToArray();
-            TaxRatesA = taxRates.Select(taxRate => taxRate.TaxRateA).ToArray();
-            TaxRatesB = taxRates.Select(taxRate => taxRate.TaxRateB).ToArray();
         }
 
         public int[] TaxThresholds { get; set; }

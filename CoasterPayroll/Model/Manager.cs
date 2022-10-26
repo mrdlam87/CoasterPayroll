@@ -8,6 +8,6 @@ namespace CoasterPayroll.Model
 {
     public class Manager : Employee
     {
-        public string Permissions { get; set; }
+        public bool Permissions { get; set; }
     }
 }

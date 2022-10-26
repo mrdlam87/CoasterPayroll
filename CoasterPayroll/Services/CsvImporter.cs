@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using CoasterPayroll.Model;
 using System.IO;
 
-namespace CsvHelperMaui.Services
+namespace CoasterPayroll.Services
 {
     public class CsvImporter
     {
@@ -26,13 +26,12 @@ namespace CsvHelperMaui.Services
 
                     while (csv.Read())
                     {
-                        data.Add(new Employee { 
+                        data.Add(new Employee
+                        {
                             EmployeeID = csv.GetField<int>(0),
-                            Person = new Person { 
-                                FirstName = csv.GetField<string>(1), 
-                                LastName = csv.GetField<string>(2) 
-                            },
-                            TaxNumber = csv.GetField<int>(3), 
+                            FirstName = csv.GetField<string>(1),
+                            LastName = csv.GetField<string>(2),
+                            TaxNumber = csv.GetField<int>(3),
                             IsWithThreshold = csv.GetField<string>(4) == "Y" ? true : false,
                         });
                     }
@@ -71,7 +70,7 @@ namespace CsvHelperMaui.Services
 
         public static void SavePaySlip(PaySlip paySlip, string path)
         {
-            PaySlipRecord record = new()
+            PaySlipMap record = new()
             {
                 EmployeeID = paySlip.Employee.EmployeeID,
                 WeekHours = paySlip.WeekHours,
@@ -86,7 +85,7 @@ namespace CsvHelperMaui.Services
             using (var writer = new StreamWriter(path))
             {
                 using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-                csv.WriteHeader<PaySlipRecord>();
+                csv.WriteHeader<PaySlipMap>();
                 csv.NextRecord();
                 csv.WriteRecord(record);
             }
@@ -94,7 +93,8 @@ namespace CsvHelperMaui.Services
 
         public static void SavePaySlips(List<PaySlip> paySlips, string path)
         {
-            List<PaySlipRecord> records = paySlips.Select(paySlip => new PaySlipRecord {
+            List<PaySlipMap> records = paySlips.Select(paySlip => new PaySlipMap
+            {
                 EmployeeID = paySlip.Employee.EmployeeID,
                 WeekHours = paySlip.WeekHours,
                 HourlyRate = paySlip.HourlyRate,
@@ -113,7 +113,24 @@ namespace CsvHelperMaui.Services
         }
     }
 
-    public sealed class PaySlipRecord
+    public sealed class EmployeeMap
+    {
+        public int ID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int TaxNumber { get; set; }
+        public string IsWithThreshold { get; set; }
+    }
+
+    public sealed class TaxRateMap
+    {
+        public int LowerThreshold { get; set; }
+        public int UpperThreshold { get; set; }
+        public double TaxRateA { get; set; }
+        public double TaxRateB { get; set; }
+    }
+
+    public sealed class PaySlipMap
     {
         public int EmployeeID { get; set; }
         public int WeekHours { get; set; }
@@ -125,16 +142,8 @@ namespace CsvHelperMaui.Services
         public double Superannuation { get; set; }
     }
 
-    public sealed class EmployeeRecord
-    {
-        public int ID { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int TaxNumber { get; set; }
-        public string IsWithThreshold { get; set; }
-    }
 
-    public sealed class CsvEmployeeMap : ClassMap<EmployeeRecord>
+    public sealed class CsvEmployeeMap : ClassMap<EmployeeMap>
     {
         public CsvEmployeeMap()
         {
@@ -146,7 +155,7 @@ namespace CsvHelperMaui.Services
         }
     }
 
-    public sealed class CsvTaxRateMap : ClassMap<TaxRate>
+    public sealed class CsvTaxRateMap : ClassMap<TaxRateMap>
     {
         public CsvTaxRateMap()
         {

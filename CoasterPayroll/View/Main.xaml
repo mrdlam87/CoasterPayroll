@@ -63,9 +63,9 @@
                             <DataGridTextColumn Header="ID"
                                                 Binding="{Binding EmployeeID}"/>
                             <DataGridTextColumn Header="First Name"
-                                                Binding="{Binding Person.FirstName}"/>
+                                                Binding="{Binding FirstName}"/>
                             <DataGridTextColumn Header="Last Name"
-                                                Binding="{Binding Person.LastName}"/>
+                                                Binding="{Binding LastName}"/>
                             <DataGridTextColumn Header="Tax Number"
                                                 Binding="{Binding TaxNumber}"/>
                         </DataGrid.Columns>
@@ -184,8 +184,8 @@
                               IsEnabled="False">
                         <TextBlock Text="{Binding SelectedPaySlip.SubmittedDate, StringFormat='Date Submitted: {0}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.Employee.EmployeeID, StringFormat='Employee ID: {0}'}" Margin="0,0,0,5"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.Employee.Person.FirstName, StringFormat='First Name: {0}'}" Margin="0,0,0,5"/>
-                        <TextBlock Text="{Binding SelectedPaySlip.Employee.Person.LastName, StringFormat='First Name: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.FirstName, StringFormat='First Name: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.LastName, StringFormat='First Name: {0}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.WeekHours, StringFormat='Hours Worked: {0}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.HourlyRate, StringFormat='Hourly Rate: {0:C}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.PayGrossCalculated, StringFormat='Gross Pay: {0:C}'}" Margin="0,0,0,5"/>

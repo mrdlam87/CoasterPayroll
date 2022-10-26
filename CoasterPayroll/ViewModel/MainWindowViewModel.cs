@@ -1,5 +1,5 @@
 ﻿using CoasterPayroll.Model;
-using CsvHelperMaui.Services;
+using CoasterPayroll.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,7 +44,7 @@ namespace CoasterPayroll.ViewModel
         {
             get
             {
-                var filteredRecords = EmployeeRecords.Where(record => (record.Person.FirstName.ToLower() + record.Person.LastName.ToLower()).Contains(Query.ToLower())).ToList();
+                var filteredRecords = EmployeeRecords.Where(record => (record.FirstName.ToLower() + record.LastName.ToLower()).Contains(Query.ToLower())).ToList();
 
                 return new ObservableCollection<Employee>(filteredRecords);
             }
@@ -224,7 +224,7 @@ namespace CoasterPayroll.ViewModel
             if (SelectedPaySlip is null)
                 return;
 
-            string employeeDetailHeader = $"{SelectedEmployee.EmployeeID}-{SelectedEmployee.Person.FirstName}_{SelectedEmployee.Person.LastName}";
+            string employeeDetailHeader = $"{SelectedEmployee.EmployeeID}-{SelectedEmployee.FirstName}_{SelectedEmployee.LastName}";
             var fileName = $@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\Pay-{employeeDetailHeader}-{DateTime.Now.ToFileTime()}.csv";
 
             CsvImporter.SavePaySlip(SelectedPaySlip, fileName);
@@ -235,7 +235,7 @@ namespace CoasterPayroll.ViewModel
             if (DisplayedPaySlips.Count == 0)
                 return;
 
-            string employeeDetailHeader = $"{SelectedEmployee.EmployeeID}-{SelectedEmployee.Person.FirstName}_{SelectedEmployee.Person.LastName}";
+            string employeeDetailHeader = $"{SelectedEmployee.EmployeeID}-{SelectedEmployee.FirstName}_{SelectedEmployee.LastName}";
             var fileName = $@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\AllPays-{employeeDetailHeader}-{DateTime.Now.ToFileTime()}.csv";
 
             CsvImporter.SavePaySlips(DisplayedPaySlips.ToList(), fileName);
