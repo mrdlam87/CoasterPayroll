@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CoasterPayroll.Model
 {
+    /// <summary>
+    /// Class representing tax rate data
+    /// </summary>
     public class TaxRate
     {
         public int LowerThreshold { get; set; }

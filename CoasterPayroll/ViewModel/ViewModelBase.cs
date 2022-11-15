@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CoasterPayroll.ViewModel
 {
+    /// <summary>
+    /// Class representing the base view model
+    /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;

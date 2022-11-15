@@ -188,6 +188,7 @@
                         <TextBlock Text="{Binding SelectedPaySlip.Employee.LastName, StringFormat='First Name: {0}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.WeekHours, StringFormat='Hours Worked: {0}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.HourlyRate, StringFormat='Hourly Rate: {0:C}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedPaySlip.Employee.IsWithThreshold, StringFormat='Tax-Free Claimed: {0}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.PayGrossCalculated, StringFormat='Gross Pay: {0:C}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.TaxCalculated, StringFormat='Net Tax: {0:C}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedPaySlip.PayNetCalculated, StringFormat='Net Pay: {0:C}'}" Margin="0,0,0,5"/>

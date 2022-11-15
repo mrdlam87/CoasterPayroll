@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CoasterPayroll.Model
 {
+    /// <summary>
+    /// A class representing a person
+    /// </summary>
     public class Person
     {
         public string FirstName { get; set; }

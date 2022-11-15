@@ -1,19 +1,23 @@
 ﻿using CsvHelper.Configuration;
 using CsvHelper;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoasterPayroll.Model;
 using System.IO;
 
 namespace CoasterPayroll.Services
 {
-    public class CsvImporter
+    /// <summary>
+    /// Class for static Csv tools methods
+    /// </summary>
+    public class CsvTools
     {
+        /// <summary>
+        /// Imports CSV employee data
+        /// </summary>
+        /// <param name="fileName">String containing the file path</param>
+        /// <returns>A List of employee records</returns>
         public static List<Employee> ImportEmployees(string fileName)
         {
             List<Employee> data = new();
@@ -41,6 +45,11 @@ namespace CoasterPayroll.Services
             return data;
         }
 
+        /// <summary>
+        /// Imports CSV tax rate data
+        /// </summary>
+        /// <param name="fileName">The file path name</param>
+        /// <returns>A List of tax rate data</returns>
         public static List<TaxRate> ImportTaxRates(string fileName)
         {
             List<TaxRate> data = new();
@@ -68,6 +77,11 @@ namespace CoasterPayroll.Services
             return data;
         }
 
+        /// <summary>
+        /// Exports selected payslip to CSV file
+        /// </summary>
+        /// <param name="paySlip">Selected payslip object</param>
+        /// <param name="path">The file path name to export to</param>
         public static void SavePaySlip(PaySlip paySlip, string path)
         {
             PaySlipMap record = new()
@@ -91,6 +105,11 @@ namespace CoasterPayroll.Services
             }
         }
 
+        /// <summary>
+        /// Exports all the available payslips to CSV file
+        /// </summary>
+        /// <param name="paySlips">List of available payslips</param>
+        /// <param name="path">The file path name to export to</param>
         public static void SavePaySlips(List<PaySlip> paySlips, string path)
         {
             List<PaySlipMap> records = paySlips.Select(paySlip => new PaySlipMap
@@ -113,23 +132,9 @@ namespace CoasterPayroll.Services
         }
     }
 
-    public sealed class EmployeeMap
-    {
-        public int ID { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int TaxNumber { get; set; }
-        public string IsWithThreshold { get; set; }
-    }
-
-    public sealed class TaxRateMap
-    {
-        public int LowerThreshold { get; set; }
-        public int UpperThreshold { get; set; }
-        public double TaxRateA { get; set; }
-        public double TaxRateB { get; set; }
-    }
-
+    /// <summary>
+    /// A class representing paylsip map for Csv helper
+    /// </summary>
     public sealed class PaySlipMap
     {
         public int EmployeeID { get; set; }
@@ -143,11 +148,11 @@ namespace CoasterPayroll.Services
     }
 
 
-    public sealed class CsvEmployeeMap : ClassMap<EmployeeMap>
+    public sealed class CsvEmployeeMap : ClassMap<Employee>
     {
         public CsvEmployeeMap()
         {
-            Map(m => m.ID).Index(0);
+            Map(m => m.EmployeeID).Index(0);
             Map(m => m.FirstName).Index(1);
             Map(m => m.LastName).Index(2);
             Map(m => m.TaxNumber).Index(3);
@@ -155,7 +160,7 @@ namespace CoasterPayroll.Services
         }
     }
 
-    public sealed class CsvTaxRateMap : ClassMap<TaxRateMap>
+    public sealed class CsvTaxRateMap : ClassMap<TaxRate>
     {
         public CsvTaxRateMap()
         {

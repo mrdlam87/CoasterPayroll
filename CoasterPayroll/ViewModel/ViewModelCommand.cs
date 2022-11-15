@@ -7,6 +7,9 @@ using System.Windows.Input;
 
 namespace CoasterPayroll.ViewModel
 {
+    /// <summary>
+    /// Class representing view model commands
+    /// </summary>
     public class ViewModelCommand : ICommand
     {
         //Fields
