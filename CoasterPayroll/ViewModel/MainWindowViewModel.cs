@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CoasterPayroll.ViewModel
@@ -23,6 +24,8 @@ namespace CoasterPayroll.ViewModel
         private string _weekHoursInput;
         private string _showAll;
         private string _showDetail;
+        private string _showEmployees;
+        private string _showEmployee;
         #endregion
 
         #region Properties
@@ -91,12 +94,13 @@ namespace CoasterPayroll.ViewModel
             get => _selectedEmployee;
             set
             {
+                //Update displayed payslips when selected employee changes
                 _selectedEmployee = value;
                 OnPropertyChanged(nameof(SelectedEmployee));
                 OnPropertyChanged(nameof(DisplayedPaySlips));
 
                 //Set selected payslip to employee's latest
-                if(DisplayedPaySlips.Count > 0)
+                if (DisplayedPaySlips.Count > 0)
                 {
                     SelectedPaySlip = DisplayedPaySlips.Last();
                 }
@@ -181,8 +185,46 @@ namespace CoasterPayroll.ViewModel
                 OnPropertyChanged(nameof(ShowDetailVisibility));
             }
         }
-        public double SuperRate { get => 10.5; }
+
+        /// <summary>
+        /// Status/flag for visibity of show all employees components
+        /// </summary>
+        public string ShowAllEmployeesVisibilty
+        {
+            get => _showEmployees;
+            set
+            {
+                _showEmployees = value;
+                OnPropertyChanged(nameof(ShowAllEmployeesVisibilty));
+            }
+        }
+
+        /// <summary>
+        /// Status/flag for visibity of show employee detail components
+        /// </summary>
+        public string ShowEmployeeVisibility
+        {
+            get => _showEmployee;
+            set
+            {
+                _showEmployee = value;
+                OnPropertyChanged(nameof(ShowEmployeeVisibility));
+            }
+        }
+
+        /// <summary>
+        /// Current Australian superannuation rate
+        /// </summary>
+        public static double SuperRate { get => 10.5; }
+
+        /// <summary>
+        /// Pay calculator object instance for calculating without tax free claimed
+        /// </summary>
         public PayCalculatorNoThreshold PayCalculatorNoThreshold { get; set; }
+
+        /// <summary>
+        /// Pay calculator object instance for calculating with tax free claimed
+        /// </summary>
         public PayCalculatorWithThreshold PayCalculatorWithThreshold { get; set; }
 
         #endregion
@@ -194,9 +236,14 @@ namespace CoasterPayroll.ViewModel
         public ICommand SaveAllPayslipsCommand { get; }
         public ICommand ShowAllCommand { get; }
         public ICommand ShowDetailCommand { get; }
+        public ICommand ShowEmployeeCommand { get; }
+        public ICommand ShowAllEmployeesCommand { get; }
         #endregion
 
-        //Constructor
+        /// <summary>
+        /// Constructor for MainWindowViewModel
+        /// </summary>
+        /// 
         public MainWindowViewModel()
         {
             //EmployeeRecords = CsvImporter.ImportEmployees(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
@@ -210,9 +257,13 @@ namespace CoasterPayroll.ViewModel
             SaveAllPayslipsCommand = new ViewModelCommand(SaveAllPaySlips);
             ShowAllCommand = new ViewModelCommand(ShowAll);
             ShowDetailCommand = new ViewModelCommand(ShowDetail);
+            ShowEmployeeCommand = new ViewModelCommand(ShowEmployee);
+            ShowAllEmployeesCommand = new ViewModelCommand(ShowAllEmployees);
             Query = "";
             ShowAllVisibility = "Hidden";
             ShowDetailVisibility = "Visible";
+            ShowEmployeeVisibility = "Hidden";
+            ShowAllEmployeesVisibilty = "Visible";
         }
 
         #region ICommand Methods
@@ -223,11 +274,6 @@ namespace CoasterPayroll.ViewModel
         private void LoadRecords(object obj)
         {
             EmployeeRecords = CsvTools.ImportEmployees(@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\employee.csv");
-
-            //if (EmployeeRecords.Count > 0)
-            //{
-            //    MessageBox.Show("All employee records have been loaded.");
-            //}
         }
 
         /// <summary>
@@ -236,12 +282,22 @@ namespace CoasterPayroll.ViewModel
         /// <param name="obj"></param>
         private void AddPaySlip(object obj)
         {
-            if (SelectedEmployee is null)
-                return;
+            bool weekHoursValid = int.TryParse(WeekHoursInput, out int weekHours);
+            bool hourlyRateValid = int.TryParse(HourlyRateInput, out int hourlyRate);
 
+            //Validate inputs
+            if (SelectedEmployee is null)
+            {
+                MessageBox.Show("No employee selected.");
+                return;
+            } else if (!weekHoursValid || !hourlyRateValid)
+            {
+                MessageBox.Show("Invalid input type.");
+                return;
+            }
+
+            //Assign calculator type based on tax free claimed
             PayCalculator PayCalcualtor = SelectedEmployee.IsWithThreshold ? PayCalculatorWithThreshold : PayCalculatorNoThreshold;
-            int weekHours = int.Parse(WeekHoursInput);
-            double hourlyRate = double.Parse(HourlyRateInput);
 
             SelectedPaySlip = new()
             {
@@ -257,6 +313,7 @@ namespace CoasterPayroll.ViewModel
 
             PaySlips.Add(SelectedPaySlip);
 
+            //Reset input fields
             HourlyRateInput = WeekHoursInput = "";
             OnPropertyChanged(nameof(DisplayedPaySlips));
         }
@@ -274,6 +331,7 @@ namespace CoasterPayroll.ViewModel
             var fileName = $@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\Pay-{employeeDetailHeader}-{DateTime.Now.ToFileTime()}.csv";
 
             CsvTools.SavePaySlip(SelectedPaySlip, fileName);
+            MessageBox.Show($"File saved at {fileName}");
         }
 
         /// <summary>
@@ -289,6 +347,7 @@ namespace CoasterPayroll.ViewModel
             var fileName = $@"C:\Users\dannn\OneDrive\Programming\C#\Coaster Payroll\CoasterPayroll\CoasterPayroll\AllPays-{employeeDetailHeader}-{DateTime.Now.ToFileTime()}.csv";
 
             CsvTools.SavePaySlips(DisplayedPaySlips.ToList(), fileName);
+            MessageBox.Show($"File saved at {fileName}");
         }
 
         /// <summary>
@@ -302,7 +361,7 @@ namespace CoasterPayroll.ViewModel
         }
 
         /// <summary>
-        /// Sets the detial flag to visible
+        /// Sets the detail flag to visible
         /// </summary>
         /// <param name="obj"></param>
         public void ShowDetail(object obj)
@@ -310,6 +369,28 @@ namespace CoasterPayroll.ViewModel
             ShowAllVisibility = "Hidden";
             ShowDetailVisibility = "Visible";
         }
+
+        /// <summary>
+        /// Sets the show employee detail flag to visible
+        /// </summary>
+        /// <param name="obj"></param>
+        public void ShowEmployee(object obj)
+        {
+            ShowEmployeeVisibility = "Visible";
+            ShowAllEmployeesVisibilty = "Hidden";
+        }
+
+        /// <summary>
+        /// Sets the show all employees flag to visible
+        /// </summary>
+        /// <param name="obj"></param>
+        public void ShowAllEmployees(object obj)
+        {
+            ShowEmployeeVisibility = "Hidden";
+            ShowAllEmployeesVisibilty = "Visible";
+        }
+
+
         #endregion
     }
 }

@@ -3,11 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CoasterPayroll.View"
         xmlns:viewModel="clr-namespace:CoasterPayroll.ViewModel"
-        xmlns:model="clr-namespace:CoasterPayroll.Model"
         mc:Ignorable="d"
-        Title="Main" Height="450" Width="800">
+        Title="Main" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <viewModel:MainWindowViewModel/>
     </Window.DataContext>
@@ -32,22 +31,36 @@
                     <Grid Grid.Row="0" VerticalAlignment="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Orientation="Horizontal"
-                                    Grid.Column="0">
+                        <Grid Grid.Column="0"
+                          VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
                             <Button Content="Load" 
-                                Margin="0,0,10,0" Padding="10,0,10,0"
-                                Command="{Binding LoadCommand}"/>
-                            <Button Content="Save" 
-                                Padding="10,0,10,0"
-                                Command="{Binding}"/>
-                        </StackPanel>
+                                    Margin="0,0,10,0" Padding="10,0,10,0"
+                                    Grid.Column="0"
+                                    Command="{Binding LoadCommand}"/>
+                            <Button Content="Show All" 
+                                    Grid.Column="1"
+                                    Padding="10,0,10,0"
+                                    Width="85"
+                                    Command="{Binding ShowAllEmployeesCommand}"
+                                    Visibility="{Binding ShowEmployeeVisibility}"/>
+                            <Button Content="Show Detail" 
+                                    Grid.Column="1"
+                                    Padding="10,0,10,0"
+                                    Width="85"
+                                    Command="{Binding ShowEmployeeCommand}"
+                                    Visibility="{Binding ShowAllEmployeesVisibilty}"/>
+                        </Grid>
                         <Label Content="Search"
                                Grid.Column="1"
-                               Margin="0,0,10,0" Padding="0,0,0,0"
+                               Margin="20,0,5,0" Padding="0,0,0,0"
                                HorizontalAlignment="Right"/>
                         <TextBox Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}"
                                  Grid.Column="2"/>
@@ -58,7 +71,24 @@
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               SelectionMode="Single"
-                              SelectedItem="{Binding SelectedEmployee}">
+                              SelectedItem="{Binding SelectedEmployee}"
+                              Visibility="{Binding ShowAllEmployeesVisibilty}"
+                              IsSynchronizedWithCurrentItem="True">
+                        <DataGrid.InputBindings>
+                            <MouseBinding MouseAction="LeftDoubleClick"
+                                          Command="{Binding ShowEmployeeCommand}"/>
+                        </DataGrid.InputBindings>
+
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="ToolTip">
+                                    <Setter.Value>
+                                        <TextBlock Text="Double Click for Detail" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.RowStyle>
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID"
                                                 Binding="{Binding EmployeeID}"/>
@@ -70,6 +100,18 @@
                                                 Binding="{Binding TaxNumber}"/>
                         </DataGrid.Columns>
                     </DataGrid>
+
+                    <ListView Grid.Row="1"
+                              Padding="5"
+                              Visibility="{Binding ShowEmployeeVisibility}"
+                              IsEnabled="False">
+                        <TextBlock Text="{Binding SelectedEmployee.EmployeeID, StringFormat='Employee ID: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedEmployee.FirstName, StringFormat='First Name: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedEmployee.LastName, StringFormat='Last Name: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedEmployee.TaxNumber, StringFormat='Tax File Number: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedEmployee.IsWithThreshold, StringFormat='Tax-free Claimed: {0}'}" Margin="0,0,0,5"/>
+                    </ListView>
+
 
                     <Grid Grid.Row="2"
                           VerticalAlignment="Bottom">
@@ -126,12 +168,14 @@
                         <Button Content="Show All"
                                 Grid.Column="2"
                                 Margin="0,0,0,0" Padding="10,0,10,0"
+                                Width="85"
                                 HorizontalAlignment="Right"
                                 Visibility="{Binding ShowDetailVisibility}"
                                 Command="{Binding ShowAllCommand}"/>
                         <Button Content="Show Detail"
                                 Grid.Column="2"
                                 Margin="0,0,0,0" Padding="10,0,10,0"
+                                Width="85"
                                 HorizontalAlignment="Right"
                                 Visibility="{Binding ShowAllVisibility}"
                                 Command="{Binding ShowDetailCommand}"/>
