@@ -11,6 +11,6 @@ namespace CoasterPayroll.Model
     /// </summary>
     public class Manager : Employee
     {
-        public bool Permissions { get; set; }
+        public bool HasPermissions { get; set; }
     }
 }

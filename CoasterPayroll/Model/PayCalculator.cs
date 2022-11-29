@@ -20,8 +20,19 @@ namespace CoasterPayroll.Model
             TaxRatesB = taxRates.Select(taxRate => taxRate.TaxRateB).ToArray();
         }
 
+        /// <summary>
+        /// Array of integer thresholds for tax calculation
+        /// </summary>
         public int[] TaxThresholds { get; set; }
+
+        /// <summary>
+        /// Array of A co-effcicients for tax calculation
+        /// </summary>
         public double[] TaxRatesA { get; set; }
+
+        /// <summary>
+        /// Array of B co-effcicients for tax calculation
+        /// </summary>
         public double[] TaxRatesB { get; set; }
 
         /// <summary>
@@ -32,7 +43,7 @@ namespace CoasterPayroll.Model
         /// <returns>A double containing the net pay for the week</returns>
         public double CalculatePay(int weekHours, double hourlyRate)
         {
-            return weekHours * hourlyRate - CalculateTax(weekHours,hourlyRate);
+            return Math.Round(weekHours * hourlyRate - CalculateTax(weekHours, hourlyRate), 2);
         }
 
         /// <summary>
@@ -51,7 +62,7 @@ namespace CoasterPayroll.Model
                 taxRateIndex++;
             }
 
-            return TaxRatesA[taxRateIndex] * grossPay - TaxRatesB[taxRateIndex];
+            return Math.Round(TaxRatesA[taxRateIndex] * grossPay - TaxRatesB[taxRateIndex], 2);
         }
 
         /// <summary>
@@ -63,7 +74,7 @@ namespace CoasterPayroll.Model
         /// <returns>A double containing the total superaanuation to pay for the week</returns>
         public double CalculateSuper(int weekHours, double hourlyRate, double superRate)
         {
-            return weekHours * hourlyRate * superRate / 100;
+            return Math.Round(weekHours * hourlyRate * superRate / 100,2);
         }
     }
 }

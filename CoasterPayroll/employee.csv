@@ -1,5 +1,7 @@
-1,Danny,Lam,1234,Y
-2,Sarah,Ly,1235,Y
-3,Jasmine,Bui,1236,Y
-4,Jaiden,Bui,1237,Y
-5,Simba,Lam,1238,N
+1,Danny,Lam,1234,Y,Manager
+2,Mindy,Boss,1235,N,Employee
+3,Mike,Jobs,1236,Y,Employee
+4,Mary,Sue,1237,N,Employee
+5,Minh,Cung,1238,Y,Employee
+6,Mohammad,Hassan,1239,Y,Manager
+7,Moanna,Lee,1240,N,Manager

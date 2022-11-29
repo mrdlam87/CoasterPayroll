@@ -30,14 +30,30 @@ namespace CoasterPayroll.Services
 
                     while (csv.Read())
                     {
-                        data.Add(new Employee
+                        //Add manager instance if csv field is Manager
+                        if (csv.GetField<string>(5) == "Manager")
                         {
-                            EmployeeID = csv.GetField<int>(0),
-                            FirstName = csv.GetField<string>(1),
-                            LastName = csv.GetField<string>(2),
-                            TaxNumber = csv.GetField<int>(3),
-                            IsWithThreshold = csv.GetField<string>(4) == "Y" ? true : false,
-                        });
+                            data.Add(new Manager
+                            {
+                                EmployeeID = csv.GetField<int>(0),
+                                FirstName = csv.GetField<string>(1),
+                                LastName = csv.GetField<string>(2),
+                                TaxNumber = csv.GetField<int>(3),
+                                IsWithThreshold = csv.GetField<string>(4) == "Y" ? true : false,
+                                HasPermissions = true,
+                            });
+                        }
+                        else
+                        {
+                            data.Add(new Employee
+                            {
+                                EmployeeID = csv.GetField<int>(0),
+                                FirstName = csv.GetField<string>(1),
+                                LastName = csv.GetField<string>(2),
+                                TaxNumber = csv.GetField<int>(3),
+                                IsWithThreshold = csv.GetField<string>(4) == "Y" ? true : false,
+                            });
+                        }
                     }
                 }
 
@@ -133,6 +149,19 @@ namespace CoasterPayroll.Services
     }
 
     /// <summary>
+    /// A class representing employee map for Csv helper
+    /// </summary>
+    public sealed class EmployeeMap
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int EmployeeID { get; set; }
+        public int TaxNumber { get; set; }
+        public bool IsWithThreshold { get; set; }
+        public bool HasPermissions { get; set; }
+    }
+
+    /// <summary>
     /// A class representing paylsip map for Csv helper
     /// </summary>
     public sealed class PaySlipMap
@@ -148,7 +177,7 @@ namespace CoasterPayroll.Services
     }
 
 
-    public sealed class CsvEmployeeMap : ClassMap<Employee>
+    public sealed class CsvEmployeeMap : ClassMap<EmployeeMap>
     {
         public CsvEmployeeMap()
         {
@@ -157,6 +186,7 @@ namespace CoasterPayroll.Services
             Map(m => m.LastName).Index(2);
             Map(m => m.TaxNumber).Index(3);
             Map(m => m.IsWithThreshold).Index(4);
+            Map(m => m.HasPermissions).Index(5);
         }
     }
 

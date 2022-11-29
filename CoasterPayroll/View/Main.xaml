@@ -110,6 +110,7 @@
                         <TextBlock Text="{Binding SelectedEmployee.LastName, StringFormat='Last Name: {0}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedEmployee.TaxNumber, StringFormat='Tax File Number: {0}'}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding SelectedEmployee.IsWithThreshold, StringFormat='Tax-free Claimed: {0}'}" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding SelectedEmployee.HasPermissions, StringFormat='Has permissions: {0}'}" Margin="0,0,0,5"/>
                     </ListView>
 
 

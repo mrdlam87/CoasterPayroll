@@ -13,7 +13,9 @@ namespace CoasterPayroll.Model
     public class Employee : Person
     {     
         public int EmployeeID { get; set; }
+
         public int TaxNumber { get; set; }
+
         public bool IsWithThreshold { get; set; }
     }
 }
